@@ -300,8 +300,8 @@
           }
           .newTaskAddRight{
             img{
-              width: 0.42rem;
-              height: 0.42rem;
+              width: 0.8rem;
+              height: auto;
               margin-right: 0.3rem;
             }
           }
@@ -1334,7 +1334,14 @@
   }
 
   .shank{
-    animation: shank 1s infinite;
+    -webkit-animation: shank 1s infinite;
+    -moz-animation: shank 1s infinite;
+         animation: shank 1s infinite;
+  }
+  .NewShank{
+    -webkit-animation: shank 2s infinite;
+    -moz-animation: shank 2s infinite;
+         animation: shank 2s infinite;
   }
 
   @keyframes share{
@@ -1701,7 +1708,7 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
-  background: url('https://res.youth.cn/newActive/taskCenter/wallet_bg.png');
+  background: url('https://res.youth.cn/newActive/taskCenter/sizewallet_bg.png');
   background-size:100% 100%; 
 
   .title{
@@ -1771,7 +1778,7 @@
     }
   }
   .bottom{
-    background: url('https://res.youth.cn/newActive/taskCenter/wallet_adove.png');
+    background: url('https://res.youth.cn/newActive/taskCenter/newwallet_adove.png');
     background-size:100% 100%; 
     width: 5.8rem;
     height: 2.9rem;

@@ -9,7 +9,7 @@
           </div>
           <div class="homeTopLeftTwo">
             <span>{{user.user.score}}</span>
-            <label @click="goCash">满1元提现</label>
+            <label @click="goCash">立即提现</label>
           </div>
         </div>
         <div class="homeTopRightTwo" v-if="downTime" @click="goHotTime">
@@ -61,15 +61,22 @@
       </div>
       <!-- 跳转 -->
       <div class="newTask">
-        <div class="newTaskAdd rowFlex spaceBetween" @click="domePlay" v-if="is_bsg==0 && user.swz.title">
+        <div
+          class="newTaskAdd rowFlex spaceBetween"
+          @click="domePlay"
+          v-if="is_bsg==0 && user.swz.title"
+        >
           <div class="newTaskAddLeft rowFlex allCenter">
             <img :src="user.swz.logo" alt="">
             <p>{{user.swz.title[0]}}</p>
             <label v-if="user.swz.title[1]">·</label>
             <span v-if="user.swz.title[1]">{{user.swz.title[1]}}</span>
           </div>
-          <div class="newTaskAddRight rowFlex allCenter">
-            <img src="https://res.youth.cn/newActive/taskCenter/game%20%282%29.png" alt="">
+          <div
+            class="newTaskAddRight rowFlex allCenter"
+            :class="this.user.swz.is_swz=='0'?'NewShank':''"
+          >
+            <img src="https://res.youth.cn/201903_11_11h_5c861fd54a72e.png" alt="">
           </div>
         </div>
         <div class="navList rowFlex spaceAround">
@@ -507,7 +514,8 @@
           alt=""
         >
       </div>
-    </div> -->
+    </div>-->
+
     <!-- 分享完成的收入弹窗 -->
     <div class="canvasSuccess" v-if="showSuccessLayer">
       <div class="imgBg">
@@ -520,7 +528,8 @@
     <div class="tanchuang-bg" v-if="miniApp" @click="closeMiniLayer">
       <div class="miniAppLayer" @click.stop>
         <div class="miniApptitle">收益提醒</div>
-        <div class="layerText">招财幸运树
+        <div class="layerText">
+          招财幸运树
           <span>零钱已到账</span>
         </div>
         <div class="layerText">完成任务还可赚取更多零钱</div>
@@ -537,27 +546,31 @@
             </div>
             <div class="signText">
               <p class="successText">签到成功</p>
-              <p class="successInfo"><span>+100</span>青豆</p>
+              <p class="successInfo">
+                <span>+100</span>青豆
+              </p>
             </div>
           </div>
           <div class="textInfo">明日继续签到可得328青豆</div>
         </div>
-        <div class="mainList ">
-          <div class="mainListTitle">
-            - 大家都在赚 -
-          </div>
+        <div class="mainList">
+          <div class="mainListTitle">- 大家都在赚 -</div>
           <div class="TaskList">
-            <div v-if="index<3" class="taskItem rowFlex columnCenter" v-for="(item,index) in signTaskData" :key="index">
+            <div
+              v-if="index<3"
+              class="taskItem rowFlex columnCenter"
+              v-for="(item,index) in signTaskData"
+              :key="index"
+            >
               <p class="title">{{item.title}}</p>
-              <div class="rowFlex"  v-if="item.class=='red_hb'" >
+              <div class="rowFlex" v-if="item.class=='red_hb'">
                 <div class="leftImgHb"></div>
-                <div  class="num">2323232</div>
+                <div class="num">2323232</div>
               </div>
               <div class="rowFlex" v-if="item.class==''">
-                <div   class="leftImgDou"></div>
-                <div  class="numMoney">+0.1元</div>
+                <div class="leftImgDou"></div>
+                <div class="numMoney">+0.1元</div>
               </div>
-
               <div class="btn">去看看</div>
             </div>
           </div>
@@ -571,51 +584,60 @@
       </div>
     </div>
     <!-- 新加新用户弹窗 第一天-->
-    <div class="tanchuang-bg "  @click="newUserLayer" v-if="isNewUser">
+    <div class="tanchuang-bg" @click="newUserLayer" v-if="isNewUser">
       <div class="newMain columnFlex columnCenter" @click.stop>
-        <div class="title">恭喜获得信任红包</div>
+        <div class="title">恭喜获得新人红包</div>
         <div class="divnewGift">
-            <div class="left columnFlex allCenter">
-              <p class="text">现金红包</p>
-              <p class="info">可以直接提现</p>
+          <div class="left columnFlex allCenter">
+            <p class="text">现金红包</p>
+            <p class="info">可以直接提现</p>
+          </div>
+          <div class="right rowFlex allCenter">
+            <div class="num">
+              <span>{{newUserInfo.score}}</span>元
             </div>
-            <div class="right rowFlex allCenter">
-              <div class="num "><span>{{newUserInfo.score}}</span>元</div>
-            </div>
+          </div>
         </div>
         <div class="divnewGift divnewGiftTwo">
-            <div class="left columnFlex allCenter">
-              <p class="text">新人红包</p>
-              <p class="info">限时领取</p>
+          <div class="left columnFlex allCenter">
+            <p class="text">新人红包</p>
+            <p class="info">限时领取</p>
+          </div>
+          <div class="right rowFlex allCenter">
+            <div class="num">
+              <span>18</span>元
             </div>
-            <div class="right rowFlex allCenter">
-              <div class="num "><span>18</span>元</div>
-            </div>
+          </div>
         </div>
         <div class="bottom">
-            <div class="bottomBtn" @click="goCash">立即去提现</div>
+          <div class="bottomBtn" @click="goCash">立即去提现</div>
         </div>
-        <div class="closeLayer" @click="newUserLayer">
-          先去逛逛
-        </div>
+        <div class="closeLayer" @click="newUserLayer">先去逛逛</div>
       </div>
     </div>
     <!-- 新加新用户弹窗 第二天 第3天-->
     <div class="tanchuang-bg" v-if="isNewUserTwo" @click="newUserLayer">
-      <div class="newMain newMainTwo  columnFlex columnCenter" @click.stop>
-          <div class="textTitle">恭喜获得信任红包</div>
-          <div class="moneyNum">{{newUserInfo.score}}<span>元</span> </div>
-          <div class="mingInfo rowFlex allCenter" v-if="newUserInfo.day!='3'">明天还可继续领{{newUserInfo.score}}元呦~</div>
+      <div class="newMain newMainTwo columnFlex columnCenter" @click.stop>
+        <div class="textTitle">恭喜获得新人红包</div>
+        <div class="moneyNum">
+          {{newUserInfo.score}}
+          <span>元</span>
+        </div>
+        <div
+          class="mingInfo rowFlex allCenter"
+          v-if="newUserInfo.day!='3'"
+        >明天还可继续领{{newUserInfo.score}}元呦~</div>
+
+        <div
+          class="mingInfo rowFlex allCenter"
+          v-if="newUserInfo.day=='3'"
+        >直接提现,秒到账!</div>
         <div class="bottom">
-            <div class="bottomBtn" @click="goCash">立即去提现</div>
+          <div class="bottomBtn" @click="goCash">立即去提现</div>
         </div>
-        <div class="closeLayer" @click="newUserLayer">
-          先去逛逛
-        </div>
+        <div class="closeLayer" @click="newUserLayer">先去逛逛</div>
       </div>
     </div>
-
-
   </div>
 </template>
 <script>
@@ -644,8 +666,8 @@ export default {
       newTaskShow: true,
       dayTaskListShow: true,
       redTaskShow: true,
-      signTaskList:false,
-      signTaskData:[],//新增签到任务弹窗数据
+      signTaskList: false,
+      signTaskData: [], //新增签到任务弹窗数据
       zfbUrl:
         "https://render.alipay.com/p/f/jfxb4alj/pages/receive-redpacket/index.html",
       newTask: [],
@@ -655,7 +677,7 @@ export default {
       urlParam: LDZS.getUrlPrmt(),
       downTimeNum: "",
       isNewUser: false,
-      isNewUserTwo:false,
+      isNewUserTwo: false,
       newUserInfo: {}, // 如果是新用户的头像
       user: {
         user: {},
@@ -727,7 +749,7 @@ export default {
       },
       swiperData: [],
       todaySign: { show: false, score: 0 },
-      redInfo:true,
+      redInfo: true
     };
   },
 
@@ -739,8 +761,8 @@ export default {
     this.articleList();
     this.initBridge();
     //this.randomData()
-    
-    console.log(this.urlParam.device_type)
+
+    console.log(this.urlParam.device_type);
   },
   methods: {
     //赚更多青豆
@@ -762,27 +784,26 @@ export default {
       this.isNewUserTwo = false;
       this.userInfo();
     },
-    randomData(data){
-      let dataList = []
-      let newDataList=[]
-      
+    randomData(data) {
+      let dataList = [];
+      let newDataList = [];
+
       // 获取并且处理数据
 
       //取数据
-      for(let i =0;i<this.dayTaskList.length;i++){
-          let a = Math.floor(Math.random(0,1)*this.dayTaskList.length)
-            dataList.push(this.dayTaskList[a])
+      for (let i = 0; i < this.dayTaskList.length; i++) {
+        let a = Math.floor(Math.random(0, 1) * this.dayTaskList.length);
+        dataList.push(this.dayTaskList[a]);
       }
 
       // 去重
-      for(let k = 0; k < dataList.length; k++){
-          if(newDataList.indexOf(dataList[k]) == -1){
-              newDataList.push(dataList[k]);
-          }
+      for (let k = 0; k < dataList.length; k++) {
+        if (newDataList.indexOf(dataList[k]) == -1) {
+          newDataList.push(dataList[k]);
+        }
       }
-      
-      this.signTaskData=newDataList.slice(0,3);
 
+      this.signTaskData = newDataList.slice(0, 3);
     },
     closeLayer: function() {
       this.layerSign = false;
@@ -797,6 +818,7 @@ export default {
       this.miniPro = false;
       this.isNewUser = false;
       this.newGetMoneyThree = false;
+      this.isNewUserTwo = false;
     },
     closeMiniLayer: function() {
       this.miniApp = false;
@@ -850,7 +872,7 @@ export default {
             console.log("弹窗");
             that.showSuccessLayer = true;
             setTimeout(() => {
-              that.showSuccessLayer = false
+              that.showSuccessLayer = false;
               that.todaySign.show = false;
               that.userInfo();
               that.getTask(); // 更新状态
@@ -902,10 +924,10 @@ export default {
       // 试玩赚
 
       if (this.open) {
-        console.log(this.user.swz.url)
+        console.log(this.user.swz.url);
         this.open = false;
         LDZS.openUrl("openSourceUrl", {
-          url:this.user.swz.url,
+          url: this.user.swz.url,
           type: 0
         });
       }
@@ -974,9 +996,9 @@ export default {
               this.redInfo = true;
             }
             //5s后 红包的注释弹窗消失
-            setTimeout(()=>{
+            setTimeout(() => {
               this.redInfo = false;
-            },6000)
+            }, 6000);
 
             this.downTimeFn(this.user.red.nextRed);
 
@@ -1019,8 +1041,6 @@ export default {
       urlHttp.get("/TaskCenter/getTaskList", this.urlParam).then(res => {
         this.$loading("加载中", "close");
 
-
-
         if (res.data.status == "1" && JSON.stringify(res.data.list) != "[]") {
           res.data.list.new.newtask
             ? (this.newUserInfo = res.data.list.new.newtask)
@@ -1037,21 +1057,22 @@ export default {
             ? (this.newTask = res.data.list.new)
             : (this.newTaskShow = false);
 
-
           if (this.newUserInfo.new_status != "0" && res.data.list.new.newtask) {
             //普通新用户
             if (this.newUserInfo.type == "0") {
               // 新用户第一天打开
-              if(this.newUserInfo.day=="1"){
+              if (this.newUserInfo.day == "1") {
                 this.isNewUser = true;
                 // 新用户第二天或者第三天打开
-              }else if(this.newUserInfo.day=="2" || this.newUserInfo.day=="3"){
+              } else if (
+                this.newUserInfo.day == "2" ||
+                this.newUserInfo.day == "3"
+              ) {
                 this.isNewUserTwo = true;
-              }else{
+              } else {
                 // 不显示弹窗
-                console.log("新手红包已领完")
+                console.log("新手红包已领完");
               }
-              
             } else {
               //小程序用户
               this.miniApp = true;
@@ -1059,7 +1080,6 @@ export default {
             }
           } else {
             this.isNewUser = false;
-           
           }
 
           this.dayTaskList.map((item, index) => {
@@ -1125,7 +1145,7 @@ export default {
 
         // 带交互的原生跳转 原生 type 为 0
         LDZS.openUrl("openSourceUrl", {
-          url: that.returnHost(item.url) + location.search,
+          url: that.returnHost(item.url),
           type: 0
         });
       } else if (item.jump_type == "2") {
@@ -1133,7 +1153,7 @@ export default {
         console.log("type=2", item.action);
         // 不带交互的浏览器跳转
         LDZS.openUrl("openSourceUrl", {
-          url: that.returnHost(item.url) + location.search,
+          url: that.returnHost(item.url),
           type: 1
         });
       } else if (item.jump_type == "3") {
@@ -1141,7 +1161,7 @@ export default {
         console.log("type=3", item.action);
         // 系统浏览器跳转
         LDZS.openUrl("openSourceUrl", {
-          url: that.returnHost(item.url) + location.search,
+          url: that.returnHost(item.url),
           type: 2
         });
       } else if (item.jump_type == "4") {
@@ -1249,7 +1269,7 @@ export default {
             "",
             function() {}
           );
-        }else if (item.action == "web_start_sign") {
+        } else if (item.action == "web_start_sign") {
           window.WebViewJavascriptBridge.callHandler(
             item.action,
             "",
@@ -1344,9 +1364,13 @@ export default {
       let that = this;
       //优先提现
       this.closeLayer();
-      console.log(this.user.is_version_143)
-      
-      if (this.user.user.money >= 1 && this.user.user.is_one_withdraw=="0" && this.user.is_version_143!=1) {
+      console.log(this.user.is_version_143);
+
+      if (
+        this.user.user.money >= 1 &&
+        this.user.user.is_one_withdraw == "0" &&
+        this.user.is_version_143 != 1
+      ) {
         this.goBack = true;
         return false;
       }
@@ -1471,12 +1495,10 @@ export default {
       var that = this;
 
       if (type == "0") {
-         window.WebViewJavascriptBridge.callHandler(
+        window.WebViewJavascriptBridge.callHandler(
           "openSourceUrl",
           {
-            url:
-              that.user.red_url +
-              window.location.search,
+            url: that.user.red_url,
             type: 0
           },
           function() {}
@@ -1494,10 +1516,7 @@ export default {
         window.WebViewJavascriptBridge.callHandler(
           "openSourceUrl",
           {
-            url:
-              that.returnHost("") +
-              "/html/shareread/index.html" +
-              window.location.search,
+            url: that.returnHost("") + "/html/shareread/index.html",
             type: 0
           },
           function() {}
@@ -1558,9 +1577,7 @@ export default {
         window.WebViewJavascriptBridge.callHandler(
           "openSourceUrl",
           {
-            url:
-              that.user.red_url +
-              window.location.search,
+            url: that.user.red_url,
             type: 0
           },
           function() {}
@@ -1574,16 +1591,14 @@ export default {
     goLuck: function(item) {
       let url;
       let jumpTaskType = 0;
-
+      // 这里先去调 +location.search
       if (item.url.indexOf("youth.cn") != "-1") {
-        url = item.url + location.search;
-        jumpTaskType = 0;
+        (url = item.url), (jumpTaskType = 0);
       } else {
         url = item.url;
         jumpTaskType = 1;
       }
-
-      console.log(jumpTaskType);
+      console.log(url)
 
       if (this.open) {
         this.open = false;
@@ -1629,8 +1644,7 @@ export default {
         window.WebViewJavascriptBridge.callHandler(
           "openSourceUrl",
           {
-            url:
-              that.returnHost("") + "/withdraw/large" + window.location.search,
+            url: that.returnHost("") + "/withdraw/large",
             type: 0
           },
           function() {}

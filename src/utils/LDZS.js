@@ -212,7 +212,7 @@ export default {
       window.WebViewJavascriptBridge.callHandler(
         "openSourceUrl",
         {
-          url: url.returnHost("") + "/withdraw/large" + window.location.search,
+          url: url.returnHost("") + "/withdraw/large" ,
           type: 0
         },
         function() {}
