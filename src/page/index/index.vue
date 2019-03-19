@@ -20,7 +20,7 @@
             <span>{{user.red.is_red}}</span>
             <div class="downTime">定时红包</div>
           </div>
-          <div class="redInfo" v-if="redInfo">定时红包搬家啦 可直接领取</div>
+          <!-- <div class="redInfo" v-if="redInfo">定时红包搬家啦 可直接领取</div> -->
         </div>
       </div>
       <!-- 签到 -->
@@ -749,7 +749,7 @@ export default {
       },
       swiperData: [],
       todaySign: { show: false, score: 0 },
-      redInfo: true
+      //redInfo: true
     };
   },
 
@@ -990,15 +990,15 @@ export default {
             this.is_bsg = res.data.data.is_bsg;
             if (this.user.red.is_red == "0") {
               this.downTime = true;
-              this.redInfo = false;
+              //this.redInfo = false;
             } else {
               this.downTime = false;
-              this.redInfo = true;
+              //this.redInfo = true;
             }
             //5s后 红包的注释弹窗消失
-            setTimeout(() => {
-              this.redInfo = false;
-            }, 6000);
+            // setTimeout(() => {
+            //   this.redInfo = false;
+            // }, 6000);
 
             this.downTimeFn(this.user.red.nextRed);
 
@@ -1591,14 +1591,14 @@ export default {
     goLuck: function(item) {
       let url;
       let jumpTaskType = 0;
-      // 这里先去调 +location.search
-      if (item.url.indexOf("youth.cn") != "-1") {
-        (url = item.url), (jumpTaskType = 0);
+    
+      if (item.url.indexOf("youth.cn") != "-1" || item.url.indexOf("baertt.com") != "-1") {
+        url = item.url;
+        jumpTaskType = 0;
       } else {
         url = item.url;
         jumpTaskType = 1;
       }
-      console.log(url)
 
       if (this.open) {
         this.open = false;
