@@ -9,7 +9,9 @@
           </div>
           <div class="homeTopLeftTwo">
             <span>{{user.user.score}}</span>
-            <label @click="goCash">立即提现</label>
+            <!-- 这里区分版本号 小于1.4.3的是满1元提现  大于1.4.3的是立即提现 -->
+            <label v-if="user.is_version_143=='1'" @click="goCash">立即提现</label>
+            <label v-if="user.is_version_143=='0'" @click="goCash">满1元提现</label>
           </div>
         </div>
         <div class="homeTopRightTwo" v-if="downTime" @click="goHotTime">
@@ -496,8 +498,8 @@
         </div>
       </div>
     </div>
-    <!-- 新人红包  -->
-    <!-- <div class="tanchuang-bg" @click="newUserLayer" v-if="isNewUser">
+    <!-- 新人红包 这里做版本区分 is_version_143==0 小于 1.4.3 显示该弹窗 -->
+    <div class="tanchuang-bg" @click="newUserLayer" v-if="oldisNewUser && user.is_version_143=='0'">
       <div class="tc-newUser-hb" @click.stop>
         <img class="user-img" :src="newUserInfo.avatar" alt="">
         <p>恭喜您获得新人红包</p>
@@ -514,7 +516,7 @@
           alt=""
         >
       </div>
-    </div>-->
+    </div>
 
     <!-- 分享完成的收入弹窗 -->
     <div class="canvasSuccess" v-if="showSuccessLayer">
@@ -584,7 +586,7 @@
       </div>
     </div>
     <!-- 新加新用户弹窗 第一天-->
-    <div class="tanchuang-bg" @click="newUserLayer" v-if="isNewUser">
+    <div class="tanchuang-bg" @click="newUserLayer" v-if="isNewUser && user.is_version_143 =='1'">
       <div class="newMain columnFlex columnCenter" @click.stop>
         <div class="title">恭喜获得新人红包</div>
         <div class="divnewGift">
@@ -616,7 +618,7 @@
       </div>
     </div>
     <!-- 新加新用户弹窗 第二天 第3天-->
-    <div class="tanchuang-bg" v-if="isNewUserTwo" @click="newUserLayer">
+    <div class="tanchuang-bg" v-if="isNewUserTwo && user.is_version_143 =='1'" @click="newUserLayer">
       <div class="newMain newMainTwo columnFlex columnCenter" @click.stop>
         <div class="textTitle">恭喜获得新人红包</div>
         <div class="moneyNum">
@@ -749,6 +751,7 @@ export default {
       },
       swiperData: [],
       todaySign: { show: false, score: 0 },
+      oldisNewUser:false,
       //redInfo: true
     };
   },
@@ -782,6 +785,7 @@ export default {
     newUserLayer: function() {
       this.isNewUser = false;
       this.isNewUserTwo = false;
+      this.oldisNewUser =false;
       this.userInfo();
     },
     randomData(data) {
@@ -819,6 +823,7 @@ export default {
       this.isNewUser = false;
       this.newGetMoneyThree = false;
       this.isNewUserTwo = false;
+      this.oldisNewUser = false;
     },
     closeMiniLayer: function() {
       this.miniApp = false;
@@ -1044,7 +1049,7 @@ export default {
         if (res.data.status == "1" && JSON.stringify(res.data.list) != "[]") {
           res.data.list.new.newtask
             ? (this.newUserInfo = res.data.list.new.newtask)
-            : (this.isNewUser = false);
+            : (this.isNewUser = false,this.oldisNewUser=false);
           res.data.list.daily && JSON.stringify(res.data.list.daily) != "[]"
             ? (this.dayTaskList = res.data.list.daily)
             : (this.dayTaskListShow = false);
@@ -1060,6 +1065,13 @@ export default {
           if (this.newUserInfo.new_status != "0" && res.data.list.new.newtask) {
             //普通新用户
             if (this.newUserInfo.type == "0") {
+              // 这里需要区分新老版本  is_version_143==0 是老版本  is_version_143==1 是新版本 day 老版本是0 新版本是 第一天是1 第二天是2 第三天是3 以后都是0；
+              
+              if(this.user.is_version_143=="0"){//老版本
+                this.oldisNewUser=true;
+                return false;
+              }
+
               // 新用户第一天打开
               if (this.newUserInfo.day == "1") {
                 this.isNewUser = true;
@@ -1077,9 +1089,11 @@ export default {
               //小程序用户
               this.miniApp = true;
               this.isNewUser = false;
+              this.oldisNewUser=false;
             }
           } else {
             this.isNewUser = false;
+            this.oldisNewUser =false;
           }
 
           this.dayTaskList.map((item, index) => {
@@ -1364,8 +1378,7 @@ export default {
       let that = this;
       //优先提现
       this.closeLayer();
-      console.log(this.user.is_version_143);
-
+      //is_version_143  0 小于  1 大于等于
       if (
         this.user.user.money >= 1 &&
         this.user.user.is_one_withdraw == "0" &&
