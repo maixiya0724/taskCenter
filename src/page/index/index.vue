@@ -1289,10 +1289,35 @@ export default {
             "",
             function() {}
           );
-        } else {
-          console.log(1);
+        }else if(item.action=="everyday_red"){
+          LDZS.openUrl("openSourceUrl", {
+            url: that.returnHost(item.url),
+            type:1,
+            task_id :"everyday_red",
+            record_time : 60,
+            task_type : 2,
+            need_slide : 0,
+          });
+          // 新增对ASO的项目的支持
+        }else if(item.action=="ios_share"){
+              var obj = {
+                url: "http://aso.baertt.com/dist/list",
+                thumb:"https://res.youth.cn/201903_20_20g_5c920a78a2cbd.png",
+                thumbs: ["https://res.youth.cn/201903_20_20g_5c920a78a2cbd.png"],
+                title:"钱多多赚钱",
+                share_desc:"加入钱多多，轻轻松松月入上万！全网最火赚钱产品!",
+                from: 100,
+                share_way: 1,
+              }
+            window.WebViewJavascriptBridge.callHandler("shareWxf", obj, function(
+                response
+              ) {});
         }
-        console.log(item.action == "web_start_double_bean");
+
+        else {
+         
+        }
+
         this.$loading("跳转中", "close");
       }
     },
