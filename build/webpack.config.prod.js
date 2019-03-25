@@ -16,8 +16,10 @@ module.exports = function(env, { option }) {
     const plugins = [
         //  分离css 提取公共的css
         new MiniCssExtractPlugin({
-            filename: "css/[name].[chunkhash:5].css",
-            chunkFilename: "css/common.[chunkhash:5].css"
+            //filename: "css/[name].[chunkhash:5].css",
+            //chunkFilename: "css/common.[chunkhash:5].css",
+            filename: "css/[name].css",
+            chunkFilename: "css/common.css"
         }),
         //压缩css
         new optimizeCss({// 配置cssnano 如果使用默认 new optimizeCss() 默认会去掉默认不需要的css兼容

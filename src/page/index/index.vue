@@ -31,16 +31,16 @@
           <div class="signTopLeft">
             <div class="signInDay">
               <label>已连续签到</label>
-              <span>{{user.sign_day}}</span>天
+              <span>{{user.sign_day}} </span>天
             </div>
             <div class="signDayInfo">
               <label v-if="user.is_sign=='0'">
                 今日签到可得
-                <span>{{user.sign_score}}</span>青豆
+                <span>{{user.sign_score}}</span> 青豆
               </label>
               <label v-if="user.is_sign!='0'">
                 明日签到可得
-                <span>{{user.sign_score}}</span>青豆
+                <span>{{user.sign_score}}</span> 青豆
               </label>
             </div>
           </div>
@@ -103,11 +103,11 @@
         <div class="dayActiveTitle rowFlex spaceBetween columnCenter">
           <div class="titleLeft rowFlex allCenter">
             <img class="leftImg" src="https://res.youth.cn/newActive/taskCenter/hotBg.png">
-            <span>稳拿18元现金</span>
+            <span>稳拿{{newTask.new_total}}元现金</span>
           </div>
           <div class="titleRight">
             距离结束还有
-            <span>{{newTask.remainDay}}</span>天
+            <span>{{newTask.remainDay}}</span> 天
           </div>
         </div>
         <div class="activeList allCenter">
@@ -131,6 +131,12 @@
             </div>
             <div v-if="item.status==0" class="itemRight">{{item.but}}</div>
             <div v-if="item.status==1" class="itemRighted">已完成</div>
+            <!-- 新增绑定手机号后可领取奖励状态 -->
+            <div
+              v-if="item.status==2 && item.action=='bindPhoneNumber'"
+              @click.stop="receiveRewrad"
+              class="itemRight"
+            >可领取</div>
           </div>
         </div>
       </div>
@@ -429,7 +435,7 @@
               <p>{{item.nickname}}</p>
               <p>
                 刚兑换
-                <span>{{item.score}}</span>元
+                <span>{{item.score}}</span> 元
               </p>
             </li>
           </ul>
@@ -456,7 +462,7 @@
         </div>
         <div class="layerSubTitle">
           明日继续签到可得
-          <span>{{signData.user.nextScore}}</span>青豆
+          <span>{{signData.user.nextScore}}</span> 青豆
         </div>
         <!--  -->
         <div v-for="(item,index) in signData.imgList" :key="index" v-if="index==signData.user.type">
@@ -517,7 +523,6 @@
         >
       </div>
     </div>
-
     <!-- 分享完成的收入弹窗 -->
     <div class="canvasSuccess" v-if="showSuccessLayer">
       <div class="imgBg">
@@ -618,7 +623,11 @@
       </div>
     </div>
     <!-- 新加新用户弹窗 第二天 第3天-->
-    <div class="tanchuang-bg" v-if="isNewUserTwo && user.is_version_143 =='1'" @click="newUserLayer">
+    <div
+      class="tanchuang-bg"
+      v-if="isNewUserTwo && user.is_version_143 =='1'"
+      @click="newUserLayer"
+    >
       <div class="newMain newMainTwo columnFlex columnCenter" @click.stop>
         <div class="textTitle">恭喜获得新人红包</div>
         <div class="moneyNum">
@@ -629,16 +638,20 @@
           class="mingInfo rowFlex allCenter"
           v-if="newUserInfo.day!='3'"
         >明天还可继续领{{newUserInfo.score}}元呦~</div>
-
-        <div
-          class="mingInfo rowFlex allCenter"
-          v-if="newUserInfo.day=='3'"
-        >直接提现,秒到账!</div>
+        <div class="mingInfo rowFlex allCenter" v-if="newUserInfo.day=='3'">直接提现,秒到账!</div>
         <div class="bottom">
           <div class="bottomBtn" @click="goCash">立即去提现</div>
         </div>
         <div class="closeLayer" @click="newUserLayer">先去逛逛</div>
       </div>
+    </div>
+    <!-- 绑定手机号成功后的弹窗 -->
+    <div class="canvasSuccess" v-if="bindPhoneLayer">
+      <div class="imgBg">
+        <img src="https://res.youth.cn/20181019/img/icon_gold.png" alt="">
+      </div>
+      <div class="canvasSuccessText" style="margin-top:0.2rem;">绑定成功</div>
+      <div class="canvasSuccessText">+{{bindPhoneReward.money}}元</div>
     </div>
   </div>
 </template>
@@ -713,7 +726,7 @@ export default {
       signData: {
         imgList: [
           {
-            img: "https://res.youth.cn/newActive/taskCenter/邀请好友.png",
+            img: "https://res.youth.cn/20190304/newImg/newInviteImg2.png",
             text: "立即邀请去赚钱",
             type: "0"
           },
@@ -751,7 +764,9 @@ export default {
       },
       swiperData: [],
       todaySign: { show: false, score: 0 },
-      oldisNewUser:false,
+      oldisNewUser: false,
+      bindPhoneLayer: false, // 绑定手机号成功的弹窗
+      bindPhoneReward: {} // 绑定手机号后的弹窗
       //redInfo: true
     };
   },
@@ -763,9 +778,6 @@ export default {
     this.userInfo();
     this.articleList();
     this.initBridge();
-    //this.randomData()
-
-    console.log(this.urlParam.device_type);
   },
   methods: {
     //赚更多青豆
@@ -785,7 +797,7 @@ export default {
     newUserLayer: function() {
       this.isNewUser = false;
       this.isNewUserTwo = false;
-      this.oldisNewUser =false;
+      this.oldisNewUser = false;
       this.userInfo();
     },
     randomData(data) {
@@ -867,12 +879,12 @@ export default {
         });
 
         /*  
-          监听原生的方法 function 为 用户动作触发时 执行的本地代码
+          监听原生的方法 function 为 用户动作触发时 执行的本地代码 
+          执行本地刷新的方法
         */
 
         bridge.registerHandler("taskrefresh", function(data, responseCallback) {
-          console.log("返回弹窗", that.todaySign.show);
-
+          // 返回弹窗状态
           if (that.todaySign.show) {
             console.log("弹窗");
             that.showSuccessLayer = true;
@@ -890,9 +902,7 @@ export default {
         bridge.registerHandler("rewardVideoAdCallback", function(
           data,
           responseCallback
-        ) {
-          //that.getTask()
-        });
+        ) {});
         //注册回调方法
         bridge.registerHandler("web_start_double_bean_callback", function(
           // 开钱翻倍任务
@@ -1049,7 +1059,7 @@ export default {
         if (res.data.status == "1" && JSON.stringify(res.data.list) != "[]") {
           res.data.list.new.newtask
             ? (this.newUserInfo = res.data.list.new.newtask)
-            : (this.isNewUser = false,this.oldisNewUser=false);
+            : ((this.isNewUser = false), (this.oldisNewUser = false));
           res.data.list.daily && JSON.stringify(res.data.list.daily) != "[]"
             ? (this.dayTaskList = res.data.list.daily)
             : (this.dayTaskListShow = false);
@@ -1066,9 +1076,10 @@ export default {
             //普通新用户
             if (this.newUserInfo.type == "0") {
               // 这里需要区分新老版本  is_version_143==0 是老版本  is_version_143==1 是新版本 day 老版本是0 新版本是 第一天是1 第二天是2 第三天是3 以后都是0；
-              
-              if(this.user.is_version_143=="0"){//老版本
-                this.oldisNewUser=true;
+
+              if (this.user.is_version_143 == "0") {
+                //老版本
+                this.oldisNewUser = true;
                 return false;
               }
 
@@ -1089,11 +1100,11 @@ export default {
               //小程序用户
               this.miniApp = true;
               this.isNewUser = false;
-              this.oldisNewUser=false;
+              this.oldisNewUser = false;
             }
           } else {
             this.isNewUser = false;
-            this.oldisNewUser =false;
+            this.oldisNewUser = false;
           }
 
           this.dayTaskList.map((item, index) => {
@@ -1289,36 +1300,50 @@ export default {
             "",
             function() {}
           );
-        }else if(item.action=="everyday_red"){
+        } else if (item.action == "everyday_red") {
           LDZS.openUrl("openSourceUrl", {
             url: that.returnHost(item.url),
-            type:1,
-            task_id :"everyday_red",
-            record_time : 60,
-            task_type : 2,
-            need_slide : 0,
+            type: 1,
+            task_id: "everyday_red",
+            record_time: 60,
+            task_type: 2,
+            need_slide: 0
           });
           // 新增对ASO的项目的支持
-        }else if(item.action=="ios_share"){
-              var obj = {
-                url: "http://aso.baertt.com/dist/list",
-                thumb:"https://res.youth.cn/201903_20_20g_5c920a78a2cbd.png",
-                thumbs: ["https://res.youth.cn/201903_20_20g_5c920a78a2cbd.png"],
-                title:"钱多多赚钱",
-                share_desc:"加入钱多多，轻轻松松月入上万！全网最火赚钱产品!",
-                from: 100,
-                share_way: 1,
-              }
-            window.WebViewJavascriptBridge.callHandler("shareWxf", obj, function(
-                response
-              ) {});
+        } else if (item.action == "ios_share") {
+          var obj = {
+            url: "http://aso.baertt.com/dist/list",
+            thumb: "https://res.youth.cn/201903_20_20g_5c920a78a2cbd.png",
+            thumbs: ["https://res.youth.cn/201903_20_20g_5c920a78a2cbd.png"],
+            title: "钱多多赚钱",
+            share_desc: "加入钱多多，轻轻松松月入上万！全网最火赚钱产品!",
+            from: 100,
+            share_way: 1
+          };
+          window.WebViewJavascriptBridge.callHandler("shareWxf", obj, function(
+            response
+          ) {});
+        } else {
         }
-
-        else {
-         
-        }
-
         this.$loading("跳转中", "close");
+      } else if (item.jump_type == "5") {
+        let device_type = LDZS.browserInfo("iphone");
+        this.$loading("跳转中", "close");
+        //jump_type 为5 直接调用原生的方法
+
+        
+        if(device_type){ // 是ios
+          window.WebViewJavascriptBridge.callHandler("JumpTask",
+            { action_name: "bind_phone_number"}, function(
+              response
+            ) {});
+        }else{ // 不是ios
+          window.WebViewJavascriptBridge.callHandler(item.action, {}, function(
+            response
+          ) {});
+        }
+
+      } else {
       }
     },
     //新手分享
@@ -1629,8 +1654,11 @@ export default {
     goLuck: function(item) {
       let url;
       let jumpTaskType = 0;
-    
-      if (item.url.indexOf("youth.cn") != "-1" || item.url.indexOf("baertt.com") != "-1") {
+
+      if (
+        item.url.indexOf("youth.cn") != "-1" ||
+        item.url.indexOf("baertt.com") != "-1"
+      ) {
         url = item.url;
         jumpTaskType = 0;
       } else {
@@ -1688,6 +1716,29 @@ export default {
           function() {}
         );
       }
+    },
+    //首次绑定手机号成功的弹窗
+    bindPhoneSuccess() {
+      return urlHttp
+        .post("/WebApi/user/bindMobileReward", this.urlParam)
+        .then(res => {
+          if (res.data.status == "1") {
+            this.bindPhoneReward = res.data.data;
+            this.bindPhoneLayer = true;
+          } else {
+            this.$toast.center(res.data.msg);
+          }
+        });
+    },
+    //绑定手机号成功以后领取奖励
+    receiveRewrad() {
+      this.bindPhoneSuccess();
+      setTimeout(() => {
+        //更新数据
+        this.userInfo();
+        this.getTask();
+        this.bindPhoneLayer = false;
+      }, 2000);
     }
   }
 };
@@ -1697,7 +1748,6 @@ export default {
 
 /*
   1.未登录状态下 的轮播滚动接口
-
 
   弹窗类型 
   1.邀请好友

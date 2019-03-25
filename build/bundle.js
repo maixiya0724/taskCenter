@@ -30,7 +30,8 @@ function resolveEntryAndOutput(env) {
         if (env == "dev") { //区分环境
             output.filename = "js/[name].min.[hash:5].js";
         } else {
-            output.filename = "js/[name].min.[chunkhash:5].js";
+            //output.filename = "js/[name].min.[hash:5].js";
+            output.filename = "js/[name].min.js";
         }
         output.path = outputDir;
     })
