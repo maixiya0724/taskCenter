@@ -415,7 +415,7 @@
     <div class="weidenglu" v-if="loginOut">
       <p class="xianjin-hb">你有一个现金红包未领取</p>
       <div class="weidenglu-hb">
-        <p>最高可领取100现金</p>
+        <p>最高可领取10元现金</p>
         <p>满1元即可提现</p>
         <img
           class="denglulingqu"
