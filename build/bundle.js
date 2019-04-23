@@ -26,6 +26,7 @@ function resolveAlias() {
 
 function resolveEntryAndOutput(env) {
     entryFiles.forEach(dir => {
+        if (dir != ".DS_Store") {
         entry[dir] = path.resolve(__dirname, `${entryDir}/${dir}/${dir}`)
         if (env == "dev") { //区分环境
             output.filename = "js/[name].min.[hash:5].js";
@@ -34,14 +35,17 @@ function resolveEntryAndOutput(env) {
             output.filename = "js/[name].min.js";
         }
         output.path = outputDir;
+    }
     })
 }
 
 function combineHTMLWithTemplate() { // 动态生成html模板 自动检测模板数和配置title
     entryFilesArr.map(function(item, index) {
-        let obj = {}
-        obj.name = item
-        entryFilesObj.push(obj)
+        if (item != ".DS_Store") {
+            let obj = {}
+            obj.name = item
+            entryFilesObj.push(obj)
+        }
     })
     titleConfig.map(function(item, index) {
         entryFilesObj[index].title = item

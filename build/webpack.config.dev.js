@@ -14,7 +14,7 @@ module.exports = function(env) {
             open: true,
             inline: true,
             port: "8080",
-            host: "172.16.11.202",
+            host: "172.16.0.185",
             //配置反向代理
             proxy: {
                 "/api": {

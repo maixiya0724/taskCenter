@@ -87,7 +87,9 @@
             @click="goLuck(item)"
             v-for="(item,index) in user.heard"
             :key="index"
-          >
+          > 
+            <!-- 新增上标 -->
+            <div class="topIcon rowFlex allCenter" v-if="item.topIcon"></div>
             <div class="itemIcon">
               <img class="" :src="item.logo" alt="">
             </div>
