@@ -655,6 +655,63 @@
       <div class="canvasSuccessText" style="margin-top:0.2rem;">绑定成功</div>
       <div class="canvasSuccessText">+{{bindPhoneReward.money}}元</div>
     </div>
+
+     <!-- 新增的弹窗 任务中心 -->
+    <div class="bgc-color newLayerBgAll" v-if="true">
+      <!--第一种-->
+      <div class="box newLayerBg" v-if="false">
+        <div class="close"></div>
+        <div class="title">奖励您现金</div>
+        <div class="font rowFlex allCenter">
+          18<span>元</span>
+        </div>
+        <div class="btn">立即邀请</div>
+      </div>
+      <div class="bum" v-if="false">
+        新人红包已领取，不可
+        重复领取哟
+      </div>
+      <!--第三种-->
+      <div class="box1" v-if='false'>
+        <div class="close1"></div>
+        <div class="title1">恭喜您又获得</div>
+        <div class="mon">18</div>
+        <div class="titleSpan">元</div>
+        <div class="btn1">立即邀请</div>
+
+        <!--第四种-->
+        <div v-if="false">
+          <div class="box1-top"></div>
+          <div class="top-text">新人0.3元红包已到账,可提现</div>
+          <div class="btn-text">继续读文章</div>
+        </div>
+      </div>
+
+      <!--第五种-->
+      <div class="box2"  v-if="false">
+        <div class="box2-text"></div>
+        <div class="box2-text-num">
+          +3000<div class="box2-text-numT">青豆</div>
+        </div>
+        <!-- <div  class="box2-btm">新手任务再赚21.5元</div> -->
+      </div>
+   
+
+    <div class="ten"  v-if="false">
+      <div class="imgClose"></div>
+      <div class="ten-g"></div>
+      <div class="ten-qian">签到成功</div>
+      <div class="ten-dou">+100</div>
+      <div class="ten-dou-num">青豆</div>
+      <div class="ten-text">
+        - 明日继续签到可得
+        <div class="text-color">328</div>青豆 -
+      </div>
+      <div class="ten-img"></div>
+      <div class="ten-btn">立即去邀请赚钱</div>
+    </div>
+    
+ </div>
   </div>
 </template>
 <script>
